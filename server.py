@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, render_template, request, redirect
 # import the class from friend.py
 from user import User
@@ -26,6 +27,33 @@ def create_user():
     User.save(data)
     # Don't forget to redirect after saving to the database.
     return redirect('/')
-            
+
+@app.route('/edit_user/<int:id>')
+def edit(id):
+    data = {
+        "id":id
+    }
+    return render_template("edit.html",user=User.get_one(data))
+
+@app.route('/edit_user',methods=["POST"])
+def update():
+    User.update(request.form)
+    return redirect('/')
+
+@app.route('/show_user/<int:id>')
+def show(id):
+    data = {
+        "id":id
+    }
+    return render_template("show.html",user=User.get_one(data))
+
+@app.route('/delete_user/<int:id>')
+def destroy(id):
+    data = {
+        "id":id
+    }
+    User.destroy(data)
+    return redirect('/')
+
 if __name__ == "__main__":
     app.run(debug=True,port=5001)
